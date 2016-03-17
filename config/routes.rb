@@ -1,9 +1,73 @@
 Rails.application.routes.draw do
 
+
+
   devise_for :clients, :path => '', :path_names => {:sign_up => 'register', :sign_in => 'login', :sign_out => 'logout'}, controllers: { registrations: "registrations"}, :except => [:new_client_session, :client_session]
   devise_for :users
 
   root to: 'landing_pages#index'
+
+
+  get '/clients' =>'clients#index', as: :clients
+  get '/clients/new' => 'clients#new'
+  post '/clients/create' => 'clients#create'
+  get '/clients/:id' => 'clients#show', as: :client
+  get '/clients/:id/status' => 'clients#status', as: :client_status
+  get '/clients/:id/edit' => 'clients#edit', as: :client_edit
+  patch '/clients/:id' => 'clients#update', as: :client_update
+  delete '/clients/:id' => 'clients#destroy', as: :client_delete
+
+  # get '/clients/:id' => 'clients#show', as: :client
+  # get '/clients/:id/status' => 'clients#status', as: :client_status
+
+  namespace :api do
+    namespace :v1 do
+      get '/clients' => 'clients#index', as: :clients
+      post '/clients' => 'clients#create'
+      get '/clients/:id' => 'clients#show'
+      patch '/clients/:id' => 'clients#update'
+      delete '/clients/:id' => 'clients#destroy'
+    end
+  end
+
+  resources :clients do
+    resources :foreclosures, except: [:index]
+    resources :rentals, except: [:index]
+    resources :
+  end
+
+  get '/foreclosures' =>'foreclosures#index', as: :foreclosures
+
+  namespace :api do
+    namespace :v1 do
+      get '/foreclosures' => 'foreclosures#index'
+      post '/foreclosures' => 'foreclosures#create'
+      get '/foreclosures/:id' => 'foreclosures#show'
+      patch '/foreclosures/:id' => 'foreclosures#update'
+      delete '/foreclosures/:id' => 'foreclosures#destroy'
+
+    end
+  end
+
+  # namespace :api do
+  #   namespace :v1 do
+  #     get 'budgets/index'
+  #   end
+  # end
+
+  # namespace :api do
+  #   namespace :v1 do
+  #     get 'homebuyings/index'
+  #   end
+  # end
+
+
+
+
+
+
+
+
 
   get '/users' =>'users#index', as: :employee_index
   post '/search' => 'users#search'
@@ -14,14 +78,6 @@ Rails.application.routes.draw do
   patch '/users/:id' => 'users#update'
   delete '/users/:id' => 'users#destroy'
 
-  get '/clients' =>'clients#index', as: :clients
-  get '/clients/new' => 'clients#new'
-  post '/clients/create' => 'clients#create'
-  get '/clients/:id' => 'clients#show', as: :client
-  get '/clients/:id/status' => 'clients#status', as: :client_status
-  get '/clients/:id/edit' => 'clients#edit', as: :client_edit
-  patch '/clients/:id' => 'clients#update', as: :client_update
-  delete '/clients/:id' => 'clients#destroy', as: :client_delete
 
   get '/budgets' => 'budgets#index'
   get '/budgets/new' => 'budgets#new'
